@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portfolio | Kornel</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #050505, #0a0f1a);
+      color: white;
+      min-height: 200vh;
+      position: relative;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    /* Scrollbar Styling */
+    ::-webkit-scrollbar {
+      width: 5px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: linear-gradient(135deg, #050505, #0a0f1a);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background-color: rgba(0, 174, 255, 0.8);
+      border-radius: 5px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background-color: rgba(0, 132, 199, 1);
+    }
+
+    /* Navbar */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.7);
+      border: 1px solid rgba(0, 174, 255, 0.8);
+      border-radius: 14px;
+      backdrop-filter: blur(12px);
+      display: flex;
+      justify-content: center;
+      padding: 0.5rem 1rem;
+      width: min(95%, 1100px);
+      margin-top: 0.8rem;
+      z-index: 999;
+      box-shadow: 0 0 15px rgba(0, 174, 255, 0.3);
+      transition: all 0.3s ease;
+    }
+
+    nav:hover {
+      box-shadow: 0 0 25px rgba(0, 174, 255, 0.6);
+    }
+
+    /* Nav Links */
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    .nav-links a {
+      position: relative;
+      font-weight: 500;
+      padding: 0.3rem 0;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .nav-links a::after {
+      content: "";
+      position: absolute;
+      bottom: -4px;
+      left: 50%;
+      width: 0%;
+      height: 2px;
+      background: #00aef0;
+      transition: width 0.3s ease, left 0.3s ease;
+    }
+
+    .nav-links a:hover::after,
+    .nav-links a.active::after {
+      width: 100%;
+      left: 0;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: #00aef0;
+      transform: translateY(-2px);
+    }
+
+    /* Smooth scroll indicator */
+    .scroll-indicator {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 0%;
+      height: 3px;
+      background: linear-gradient(90deg, #00aef0, #0084c7);
+      z-index: 1000;
+      transition: width 0.1s ease;
+      box-shadow: 0 0 10px rgba(0, 174, 255, 0.5);
+    }
+
+    /* Hero Section */
+    header {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 0 1rem;
+      z-index: 10;
+      opacity: 0;
+      transform: translateY(50px);
+      animation: fadeInUp 1s ease-out 0.5s forwards;
+    }
+
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    header h1 {
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: bold;
+      color: #00aef0;
+      text-shadow: 0 0 15px rgba(0, 174, 255, 0.5);
+      overflow: hidden;
+      white-space: nowrap;
+      border-right: 4px solid #00aef0;
+      padding-right: 5px;
+    }
+
+    header p {
+      max-width: 600px;
+      margin-top: 1rem;
+      font-size: 1.1rem;
+      color: #a0aec0;
+      opacity: 0;
+      animation: fadeIn 1s ease-out 1.5s forwards;
+    }
+
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+      }
+    }
+
+    .btn {
+      display: inline-block;
+      margin-top: 2rem;
+      padding: 0.8rem 1.6rem;
+      background: transparent;
+      border: 2px solid #00aef0;
+      color: #00aef0;
+      border-radius: 999px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      opacity: 0;
+      animation: fadeIn 1s ease-out 2s forwards;
+    }
+
+    .btn:hover {
+      background: #00aef0;
+      color: #000;
+      box-shadow: 0 0 20px rgba(0, 174, 255, 0.6);
+      transform: translateY(-3px);
+    }
+
+    /* Section Styling */
+    section {
+      padding: 4rem 1rem;
+      max-width: 1000px;
+      margin: auto;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.6s ease;
+    }
+
+    section.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    h2 {
+      text-align: center;
+      font-size: 2rem;
+      margin-bottom: 2rem;
+      color: #00aef0;
+      text-transform: uppercase;
+      text-shadow: 
+        0 0 25px #00aef0,
+        0 0 5px #00aef0;
+      opacity: 0;
+      transform: scale(0.8);
+      transition: all 0.6s ease;
+    }
+
+    section.visible h2 {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .about-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2rem;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .about-content p {
+      max-width: 720px;
+      color: #cbd5e1;
+      line-height: 1.6;
+      margin-bottom: 10px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #00aef0;
+      opacity: 0;
+      transform: translateX(-20px);
+      transition: all 0.6s ease;
+    }
+
+    section.visible .about-content p {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    /* Cards Animation */
+    .card, .portfolio-item {
+      background: linear-gradient(135deg, #050505, #0a0f1a);
+      border: 2px solid rgba(0, 174, 255, 0.8);
+      border-radius: 10px;
+      padding: 1.5rem;
+      text-align: center;
+      transition: all 0.3s ease;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 0 20px rgba(0, 174, 255, 0.5);
+      width: 100%;
+      opacity: 0;
+      transform: translateY(20px) scale(0.95);
+    }
+
+    section.visible .card,
+    section.visible .portfolio-item {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    .card:hover, .portfolio-item:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 0 25px rgba(0, 174, 255, 0.8);
+    }
+
+    /* Portfolio Grid */
+    .portfolio-items {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    .portfolio-item {
+      padding: 1.5rem;
+      transition: all 0.4s ease;
+      animation-delay: var(--delay, 0s);
+    }
+
+    .portfolio-item:hover {
+      transform: scale(1.05) translateY(-5px);
+      box-shadow: 0 0 15px rgba(0, 174, 255, 0.6);
+    }
+
+    /* Service Grid */
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+    }
+
+    .services-grid .card:nth-child(1) {
+      transition-delay: 0.1s;
+    }
+
+    .services-grid .card:nth-child(2) {
+      transition-delay: 0.2s;
+    }
+
+    /* Skill Boxes Styling */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+
+    .skill-box {
+      background: linear-gradient(135deg, #050505, #0a0f1a);
+      border: 2px solid rgba(0, 174, 255, 0.8);
+      border-radius: 10px;
+      padding: 1.5rem;
+      text-align: center;
+      box-shadow: 0 0 20px rgba(0, 174, 255, 0.5);
+      transition: all 0.4s ease;
+      opacity: 0;
+      transform: translateY(20px) rotateX(10deg);
+    }
+
+    section.visible .skill-box {
+      opacity: 1;
+      transform: translateY(0) rotateX(0deg);
+    }
+
+    .skill-box:nth-child(1) { transition-delay: 0.1s; }
+    .skill-box:nth-child(2) { transition-delay: 0.2s; }
+    .skill-box:nth-child(3) { transition-delay: 0.3s; }
+
+    .skill-box h3 {
+      color: #00aef0;
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .skill-box p {
+      color: #cbd5e1;
+    }
+
+    .skill-box:hover {
+      transform: scale(1.05) translateY(-10px);
+      box-shadow: 0 0 30px rgba(0, 174, 255, 0.8);
+      background: linear-gradient(135deg, #0a0f1a, #050505);
+    }
+
+    /* Contact section animations */
+    #contact .about-content p {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.6s ease 0.2s;
+    }
+
+    #contact.visible .about-content p {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .card {
+        padding: 1rem;
+        width: 100%;
+      }
+
+      .portfolio-items {
+        grid-template-columns: 1fr;
+      }
+
+      .services-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .skills-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Fullscreen rain canvas behind */
+    #rainCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- Scroll Progress Indicator -->
+  <div class="scroll-indicator"></div>
+
+  <!-- Navbar -->
+  <nav>
+    <div class="nav-links">
+      <a href="#home" data-scroll="home">Home</a>
+      <a href="#about" data-scroll="about">About</a>
+      <a href="portfolio.html">Portfolio</a>
+      <a href="#services" data-scroll="services">Services</a>
+      <a href="#skills" data-scroll="skills">Skills</a>
+      <a href="#contact" data-scroll="contact">Contact</a>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <header id="home">
+    <h1 id="typing-text">
+      Hi, I'm Kornel<span id="cursor">|</span>
+    </h1>
+    <p>I design and build modern, responsive websites that are visually stunning and easy to use.</p>
+    <a href="#about" class="btn" data-scroll="about">Learn More</a>
+  </header>
+
+  <!-- About -->
+  <section id="about">
+    <h2>About Me</h2>
+    <div class="about-content">
+      <p>
+        Hi, I'm Kornel, a 17-year-old Hungarian who enjoys playing video games and coding in various languages.
+        While I'm not an expert, I feel comfortable with HTML, CSS, C#, C++, and I'm currently learning C and Lua.
+        Recently started exploring reverse engineering and game hacking as a hobby.
+      </p>
+    </div>
+  </section>
+  
+  <!-- Services -->
+  <section id="services">
+    <h2>Services</h2>
+    <div class="services-grid">
+      <div class="card">
+        <h3>Frontend Web Development</h3>
+        <p>Build modern, responsive websites with a focus on user experience.</p>
+      </div>
+      <div class="card">
+        <h3>Game developing</h3>
+        <p>In roblox, I participated in the making of some games and some small projects too including commissions.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Skills -->
+  <section id="skills">
+    <h2>Skills</h2>
+    <div class="skills-grid">
+      <div class="skill-box">
+        <h3>Coding</h3>
+        <p>Comfortable with: HTML, CSS, C#, C++ <br><br>Although I'm not an expert in them, I can mostly understand what the code is doing.<br><br>Currently learning: C, Lua, Assembly</p>
+      </div>
+      <div class="skill-box">
+        <h3>Reverse Engineering & Game Hacking</h3>
+        <p>Exploring reverse engineering and modifying games is sort of a hobby for me. <br><br>I like doing both of them, although reverse engineering is what I really like doing, sadly I'm not that good in cracking programs.</p>
+      </div>
+      <div class="skill-box">
+        <h3>Staff-Like Skills</h3>
+        <p>I have experience with leadership, team management, and communication. <br><br>I enjoy helping to organize teams, solve problems collaboratively, and provide support in managing projects effectively, ensuring smooth and efficient workflow.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact">
+    <h2>Contact Me</h2>
+    <div class="about-content">
+      <p>
+        Want to connect or collaborate?<br>
+        📧 Email: <em>your.email@example.com</em><br>
+        💬 Discord: <em>yourdiscord#0000</em>
+      </p>
+    </div>
+  </section>
+
+  <!-- Rain Canvas -->
+  <canvas id="rainCanvas"></canvas>
+
+  <script>
+    // JavaScript to simulate the typing effect
+    const textElement = document.getElementById("typing-text");
+    const cursor = document.getElementById("cursor");
+    const text = "Hi, I'm Kornel";
+    let index = 0;
+
+    textElement.textContent = "";
+
+    const typingSpeed = 100;
+
+    function typeText() {
+      if (index < text.length) {
+        textElement.textContent += text.charAt(index);
+        index++;
+        setTimeout(typeText, typingSpeed);
+      } else {
+        setTimeout(() => {
+          cursor.style.display = "none";
+        }, 300);
+      }
+    }
+
+    window.onload = () => { 
+      typeText();
+    };
+
+    // Smooth Scrolling Animation System
+    class SmoothScroller {
+      constructor() {
+        this.init();
+      }
+
+      init() {
+        // Add click listeners to navigation links
+        document.querySelectorAll('[data-scroll]').forEach(link => {
+          link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const targetId = link.getAttribute('data-scroll');
+            this.scrollToSection(targetId);
+          });
+        });
+
+        // Initialize intersection observer for scroll animations
+        this.initScrollAnimations();
+        
+        // Initialize scroll progress indicator
+        this.initScrollProgress();
+
+        // Initialize active nav highlighting
+        this.initActiveNavigation();
+      }
+
+      scrollToSection(targetId) {
+        const targetElement = document.getElementById(targetId);
+        if (!targetElement) return;
+
+        // Add smooth scroll with custom easing
+        const startPosition = window.pageYOffset;
+        const targetPosition = targetElement.offsetTop - 100; // Offset for fixed nav
+        const distance = targetPosition - startPosition;
+        const duration = 1000; // 1 second
+        let start = null;
+
+        // Custom easing function (ease-in-out-cubic)
+        const easeInOutCubic = (t) => {
+          return t < 0.5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1;
+        };
+
+        const animation = (currentTime) => {
+          if (start === null) start = currentTime;
+          const timeElapsed = currentTime - start;
+          const progress = Math.min(timeElapsed / duration, 1);
+          const ease = easeInOutCubic(progress);
+          
+          window.scrollTo(0, startPosition + (distance * ease));
+          
+          if (timeElapsed < duration) {
+            requestAnimationFrame(animation);
+          }
+        };
+
+        requestAnimationFrame(animation);
+      }
+
+      initScrollAnimations() {
+        const observerOptions = {
+          threshold: 0.1,
+          rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('visible');
+            }
+          });
+        }, observerOptions);
+
+        // Observe all sections
+        document.querySelectorAll('section').forEach(section => {
+          observer.observe(section);
+        });
+      }
+
+      initScrollProgress() {
+        const progressBar = document.querySelector('.scroll-indicator');
+        
+        window.addEventListener('scroll', () => {
+          const scrollTop = window.pageYOffset;
+          const docHeight = document.body.scrollHeight - window.innerHeight;
+          const scrollPercent = (scrollTop / docHeight) * 100;
+          
+          progressBar.style.width = scrollPercent + '%';
+        });
+      }
+
+      initActiveNavigation() {
+        const sections = document.querySelectorAll('section, header');
+        const navLinks = document.querySelectorAll('[data-scroll]');
+
+        window.addEventListener('scroll', () => {
+          let currentSection = '';
+          
+          sections.forEach(section => {
+            const sectionTop = section.offsetTop - 200;
+            const sectionHeight = section.clientHeight;
+            
+            if (window.pageYOffset >= sectionTop && 
+                window.pageYOffset < sectionTop + sectionHeight) {
+              currentSection = section.getAttribute('id');
+            }
+          });
+
+          // Update active navigation
+          navLinks.forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('data-scroll') === currentSection) {
+              link.classList.add('active');
+            }
+          });
+        });
+      }
+    }
+
+    // Initialize smooth scroller
+    document.addEventListener('DOMContentLoaded', () => {
+      new SmoothScroller();
+    });
+
+    // Canvas Rain Animation (kept from original)
+    const canvas = document.getElementById("rainCanvas");
+    const ctx = canvas.getContext("2d");
+
+    const dropColor = "rgba(0, 174, 255, 0.7)";
+    const dropCount = 100;
+    const minSpeed = 0.05;
+    const maxSpeed = 0.1;
+    const minSize = 0.5;
+    const maxSize = 1.5;
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    window.addEventListener("resize", () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+
+    const drops = [];
+    for (let i = 0; i < dropCount; i++) {
+      drops.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        speed: minSpeed + Math.random() * (maxSpeed - minSpeed),
+        size: minSize + Math.random() * (maxSize - minSize),
+      });
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (let drop of drops) {
+        ctx.beginPath();
+        ctx.arc(drop.x, drop.y, drop.size, 0, Math.PI * 2);
+
+        ctx.shadowBlur = 15;
+        ctx.shadowColor = dropColor;
+        ctx.shadowOffsetX = 0;
+        ctx.shadowOffsetY = 0;
+
+        ctx.fillStyle = dropColor;
+        ctx.fill();
+
+        drop.y -= drop.speed;
+        if (drop.y + drop.size < 0) {
+          drop.y = canvas.height + drop.size;
+          drop.x = Math.random() * canvas.width;
+          drop.speed = minSpeed + Math.random() * (maxSpeed - minSpeed);
+          drop.size = minSize + Math.random() * (maxSize - minSize);
+        }
+      }
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+
+    // Page fade in animation (kept from original)
+    document.addEventListener("DOMContentLoaded", function() {
+      const body = document.body;
+      body.style.opacity = 0;    
+      body.style.transition = "opacity 2.5s ease-out";
+
+      setTimeout(() => {
+        body.style.opacity = 1;
+      }, 20);
+    });
+  </script>
+
+</body>
+</html>
